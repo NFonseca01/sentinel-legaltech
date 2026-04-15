@@ -1,0 +1,14 @@
+class LegislativeAnalyst:
+    def __init__(self, model_provider="gemini-3-flash"):
+        self.role = "Analista de Legislación y Riesgos"
+        
+    def monitor_changes(self, jurisdiction="ES"):
+        """Busca actualizaciones en boletines oficiales o bases de jurisprudencia."""
+        print(f"[{self.role}] Monitoreando cambios en jurisdicción: {jurisdiction}...")
+        # Lógica de scraping o conexión a API legal
+        return []
+
+    def assess_risk(self, document_text):
+        """Evalúa el nivel de riesgo de un texto legal basado en leyes vigentes."""
+        print(f"[{self.role}] Analizando riesgos en el documento...")
+        return {"risk_level": "low", "flags": []}

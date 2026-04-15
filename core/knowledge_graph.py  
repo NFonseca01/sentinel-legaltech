@@ -1,0 +1,15 @@
+
+class LegalKnowledgeGraph:
+    def __init__(self, uri="bolt://localhost:7687"):
+        self.uri = uri
+
+    def link_concept_to_contract(self, contract_id, law_article):
+        """Crea una relación en la base de datos de grafos (Neo4j)."""
+        print(f"[Graph] Vinculando contrato {contract_id} con {law_article}...")
+        # Lógica para ejecutar Cypher queries: 
+        # MATCH (c:Contract {id: $c_id}), (l:Law {id: $l_id}) MERGE (c)-[:GOVERNED_BY]->(l)
+        return True
+
+    def find_legal_precedents(self, keywords):
+        """Busca nodos interconectados que coincidan con la jurisprudencia."""
+        return ["Sentencia TS 123/2024", "Directiva UE 2019/1937"]

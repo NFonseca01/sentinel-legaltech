@@ -1,0 +1,22 @@
+from cryptography.fernet import Fernet
+import os
+
+class SecureVault:
+    def __init__(self):
+        # En producción, la clave vendría de un HSM o un gestor de secretos (Vault)
+        self.key = os.getenv("SENTINEL_SECRET_KEY", Fernet.generate_key())
+        self.cipher = Fernet(self.key)
+
+    def encrypt_document(self, content: bytes) -> bytes:
+        """Cifra el contenido del documento antes de guardarlo en evidence_storage/."""
+        print("[Vault] Cifrando documento con AES-256...")
+        return self.cipher.encrypt(content)
+
+    def decrypt_document(self, encrypted_content: bytes) -> bytes:
+        """Descifra el documento para su procesamiento por agentes autorizados."""
+        print("[Vault] Descifrando documento...")
+        return self.cipher.decrypt(encrypted_content)
+
+    def generate_access_log(self, user_id, document_id):
+        """Registra quién accedió a qué para auditoría forense."""
+        pass

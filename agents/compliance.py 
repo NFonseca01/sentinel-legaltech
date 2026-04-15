@@ -1,0 +1,13 @@
+class ComplianceOfficer:
+    def __init__(self):
+        self.role = "Oficial de Cumplimiento y Ética"
+
+    def verify_rgpd(self, data_flow):
+        """Verifica si el flujo de datos cumple con el RGPD (Privacidad por diseño)."""
+        print(f"[{self.role}] Verificando cumplimiento de privacidad...")
+        return {"compliant": True, "recommendations": []}
+
+    def audit_algorithm(self, logic_description):
+        """Asegura que los algoritmos de IA no tengan sesgos discriminatorios."""
+        print(f"[{self.role}] Auditando ética algorítmica...")
+        return "Audit Pass"

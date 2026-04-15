@@ -1,0 +1,19 @@
+import json
+import time
+
+class ChainOfCustody:
+    def __init__(self, log_path="data/evidence_storage/chain_log.json"):
+        self.log_path = log_path
+
+    def record_event(self, evidence_id, action, user_id):
+        """Registra un evento en la cadena de custodia."""
+        event = {
+            "timestamp": time.time(),
+            "evidence_id": evidence_id,
+            "action": action,
+            "user_id": user_id,
+            "event_id": hashlib.md5(f"{evidence_id}{time.time()}".encode()).hexdigest()
+        }
+        # En producción, esto se escribiría en una DB inmutable o Ledger
+        print(f"[ChainOfCustody] Evento registrado: {action} por {user_id}")
+        return event

@@ -1,0 +1,13 @@
+class ContractDrafter:
+    def __init__(self):
+        self.role = "Redactor Jurídico"
+
+    def draft_clause(self, intent, constraints):
+        """Genera una cláusula específica basada en una intención (e.g., rescisión)."""
+        print(f"[{self.role}] Redactando cláusula para: {intent}...")
+        return "Cláusula generada sujeta a revisión..."
+
+    def create_addendum(self, base_contract_id, changes):
+        """Genera una adenda para un contrato existente en el Secure Vault."""
+        print(f"[{self.role}] Creando adenda para contrato {base_contract_id}...")
+        return "Adenda v1.0"

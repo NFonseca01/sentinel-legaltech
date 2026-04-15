@@ -1,0 +1,24 @@
+import uuid
+
+class SentinelEngine:
+    def __init__(self):
+        self.active_sessions = {}
+
+    def execute_workflow(self, task_type, input_data):
+        """
+        Orquesta la interacción entre agentes según el tipo de tarea.
+        Ejemplo: 'contract_review' -> Analyst -> Drafter -> Compliance
+        """
+        session_id = str(uuid.uuid4())
+        print(f"[Engine] Iniciando flujo: {task_type} (ID: {session_id})")
+        
+        # Simulación de orquestación (Workflow Pipeline)
+        if task_type == "evidence_analysis":
+            # 1. ForensicAgent valida -> 2. Analyst evalúa riesgo -> 3. Compliance verifica RGPD
+            pass
+            
+        return {"session_id": session_id, "status": "processing"}
+
+    def dispatch_to_agent(self, agent_instance, method, **kwargs):
+        """Método genérico para delegar tareas a agentes específicos."""
+        return getattr(agent_instance, method)(**kwargs)

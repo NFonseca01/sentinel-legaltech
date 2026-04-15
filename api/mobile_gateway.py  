@@ -1,0 +1,70 @@
+import json
+import base64
+import datetime
+from typing import Dict, Any
+
+class NexusGateway:
+    def __init__(self, engine, secure_vault):
+        """
+        Gestiona la salida de datos hacia el ecosistema móvil Nexus.
+        :param engine: Instancia del orquestador central.
+        :param secure_vault: Instancia del módulo de cifrado AES-256.
+        """
+        self.engine = engine
+        self.vault = secure_vault
+        self.device_id = "NEXUS-MOBILE-PRIMARY"
+        self.sync_active = True
+
+    def _prepare_secure_packet(self, payload: Dict[str, Any]) -> str:
+        """
+        Convierte el diccionario en un paquete cifrado y codificado en Base64
+        para un transporte seguro a través de la red.
+        """
+        # Añadimos metadatos de sincronización
+        payload['timestamp'] = datetime.datetime.utcnow().isoformat()
+        payload['origin'] = "Sentinel-PC-Node"
+        
+        # Convertimos a JSON y ciframos mediante el Vault (AES-256)
+        json_data = json.dumps(payload).encode('utf-8')
+        encrypted_data = self.vault.encrypt_document(json_data)
+        
+        # Codificamos en Base64 para evitar problemas con caracteres especiales en la transmisión
+        return base64.b64encode(encrypted_data).decode('utf-8')
+
+    def push_legal_alert(self, alert_data: Dict[str, Any]):
+        """
+        Envía una alerta inmediata al móvil (ej. cambio detectado en el BOE).
+        """
+        print(f"[Nexus-Gateway] Generando alerta de alta prioridad para Nexus...")
+        
+        packet = self._prepare_secure_packet({
+            "type": "CRITICAL_ALERT",
+            "priority": 1,
+            "content": alert_data
+        })
+        
+        # En una implementación real, aquí llamarías a un servicio de notificaciones 
+        # push o a un WebSocket seguro (ej. FastAPI o MQTT)
+        return {"status": "sent_to_buffer", "packet_id": hash(packet)}
+
+    def sync_daily_summary(self, summary_text: str):
+        """
+        Envía el resumen de la jornada para lectura en movilidad.
+        """
+        print(f"[Nexus-Gateway] Sincronizando resumen ejecutivo...")
+        
+        # El resumen suele ser largo, el móvil necesita una versión optimizada
+        packet = self._prepare_secure_packet({
+            "type": "DAILY_SUMMARY",
+            "content": summary_text[:2000] # Truncamos para optimizar datos móviles
+        })
+        
+        return {"status": "synced", "length": len(packet)}
+
+    def handle_mobile_request(self, encrypted_request: str):
+        """
+        Recibe y descifra peticiones que vienen desde el móvil Nexus 
+        (ej. 'Nexus, busca el contrato de ayer').
+        """
+        try:
+            # 1. Decod

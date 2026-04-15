@@ -1,0 +1,51 @@
+import os
+import pathlib
+import platform
+import shutil
+
+class DataManager:
+    def __init__(self):
+        # Establece la raíz de datos en la carpeta del usuario para evitar problemas de permisos
+        self.app_name = "SentinelLegalTech"
+        self.base_path = self._get_base_path()
+        self.structure = [
+            "vector_db", 
+            "graph_db", 
+            "evidence_storage", 
+            "logs",
+            "backups"
+        ]
+        self._initialize_folders()
+
+    def _get_base_path(self):
+        """Detecta el SO y devuelve la ruta de datos recomendada."""
+        home = pathlib.Path.home()
+        if platform.system() == "Windows":
+            return home / "AppData" / "Local" / self.app_name
+        elif platform.system() == "Darwin":  # macOS
+            return home / "Library" / "Application Support" / self.app_name
+        else:
+            return home / f".{self.app_name.lower()}"
+
+    def _initialize_folders(self):
+        """Crea la jerarquía de carpetas necesaria."""
+        for folder in self.structure:
+            path = self.base_path / folder
+            path.mkdir(parents=True, exist_ok=True)
+            print(f"[DataManager] Carpeta verificada: {path}")
+
+    def get_path(self, folder_name):
+        """Retorna la ruta absoluta de una subcarpeta específica."""
+        if folder_name in self.structure:
+            return self.base_path / folder_name
+        raise ValueError(f"Carpeta {folder_name} no definida en la estructura.")
+
+    def secure_move_to_evidence(self, source_path):
+        """Mueve un archivo al almacén de evidencias de forma segura."""
+        dest_folder = self.get_path("evidence_storage")
+        filename = os.path.basename(source_path)
+        dest_path = dest_folder / filename
+        
+        # En macOS/Linux preservamos metadatos; en Windows manejamos el bloqueo de archivos
+        shutil.copy2(source_path, dest_path)
+        return str(dest_path)

@@ -1,0 +1,18 @@
+import os
+import datetime
+
+class EvidenceAcquisition:
+    def __init__(self):
+        self.module_name = "Sentinel Acquisition"
+
+    def capture_metadata(self, file_path):
+        """Extrae metadatos del sistema de archivos para el informe forense."""
+        stats = os.stat(file_path)
+        metadata = {
+            "filename": os.path.basename(file_path),
+            "size_bytes": stats.st_size,
+            "creation_time": datetime.datetime.fromtimestamp(stats.st_ctime).isoformat(),
+            "modification_time": datetime.datetime.fromtimestamp(stats.st_mtime).isoformat(),
+            "acquisition_timestamp": datetime.datetime.utcnow().isoformat()
+        }
+        return metadata
